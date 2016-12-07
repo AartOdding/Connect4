@@ -1,9 +1,15 @@
 #pragma once
 
+#include "Board.h"
 
 
 namespace console {
 
-	char getDecision();
+	char getChoice();
+
+	void clear();
+
+	void drawBoard(Board&);
+	void drawNumbers();
 
 }

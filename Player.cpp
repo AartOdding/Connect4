@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Player.h"
-#include "input.h"
+#include "console.h"
 
 
 
@@ -28,7 +28,7 @@ int HumanPlayer::getMove() {
 	std::cout << "Choose the column you want to play: ";
 
 	while (true) {
-		char choice{ input::getDecision() };
+		char choice{ console::getChoice() };
 		if (choice == '1') return 0;
 		if (choice == '2') return 1;
 		if (choice == '3') return 2;
@@ -42,7 +42,7 @@ int HumanPlayer::getMove() {
 ComputerPlayer::ComputerPlayer() {
 	std::random_device random;
 	generator = std::mt19937(random());
-	distribution = std::uniform_int_distribution<>(0, 4);
+	distribution = std::uniform_int_distribution<>(0, 3);
 }
 
 

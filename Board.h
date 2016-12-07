@@ -8,15 +8,12 @@ class Board {
 public:
 
 	Board();
-	~Board();
 
-	void draw();
-	void drawNumbers();
-
-
-	bool isValid(int);
+	bool columnNotFull(int);
 	bool isFull();
-	bool doMove(int, Side);
+	void doMove(int, Side);
+
+	Side getField(int, int);
 
 	static const int width{ 4 };
 	static const int height{ 4 };

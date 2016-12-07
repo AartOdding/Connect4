@@ -1,6 +1,7 @@
 #include <iostream>
+#include <stdexcept>
 #include "Board.h"
-#include "input.h"
+#include "utility.h"
 
 
 Board::Board() {
@@ -12,27 +13,29 @@ Board::Board() {
 }
 
 
-Board::~Board() {
-
+// pass by value because Side is small, and we dont want the user to be able to change fields
+Side Board::getField(int x, int y) {
+	if (utility::inside(x, 0, width - 1) && utility::inside(y, 0, width - 1)) {
+		return fields[x][y];
+	}
+	else throw std::invalid_argument("that is not a column");
 }
 
 
-bool Board::isValid(int x) {
-	if (input::inside(x, 0, 3)) {
-		if (fields[x][0] == Side::NEUTRAL) return true;
+bool Board::columnNotFull(int column) {
+	if (utility::inside(column, 0, width-1)) {
+		if (fields[column][0] == Side::NEUTRAL) return true;
+		else return false;
 	}
-	return false;
+	else throw std::invalid_argument("that is not a column");
 }
 
 
-bool Board::doMove(int x, Side side) {
-	if (isValid(x)) {
-		int y = cascade(x);
-		if (y != -1) {
-			fields[x][y] = side;
-		}
+void Board::doMove(int column, Side side) {
+	if (columnNotFull(column)) {
+		int y = cascade(column);
+		fields[column][y] = side;
 	}
-	return false;
 }
 
 
@@ -45,34 +48,10 @@ bool Board::isFull() {
 }
 
 
-// returns -1 of column is already full
-int Board::cascade(int x) {
-	if		(fields[x][3] == Side::NEUTRAL) return 3;
-	else if (fields[x][2] == Side::NEUTRAL) return 2;
-	else if (fields[x][1] == Side::NEUTRAL) return 1;
-	else if (fields[x][0] == Side::NEUTRAL) return 0;
-	else return -1;
-}
-
-
-void Board::draw() {
-	std::cout << "\n\n";
-	std::cout << "\t+---+---+---+---+\n";
-	for (int y = 0; y < height; ++y) {
-		std::cout << "\t|";
-		for (int x = 0; x < width; ++x) {
-			if (fields[x][y] == Side::O)		std::cout << " O |";
-			else if(fields[x][y] == Side::X)	std::cout << " X |";
-			else										std::cout << "   |";
-		}
-		std::cout << "\n\t+---+---+---+---+\n";
-	}
-}
-
-
-void Board::drawNumbers() {
-	std::cout << "\n";
-	std::cout << "\t  ^   ^   ^   ^  \n";
-	std::cout << "\t  1   2   3   4  \n";
-	std::cout << "\n";
+int Board::cascade(int column) {
+	if		(fields[column][3] == Side::NEUTRAL) return 3;
+	else if (fields[column][2] == Side::NEUTRAL) return 2;
+	else if (fields[column][1] == Side::NEUTRAL) return 1;
+	else if (fields[column][0] == Side::NEUTRAL) return 0;
+	else throw std::invalid_argument("that column is already full");
 }
