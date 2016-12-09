@@ -19,6 +19,7 @@ public:
 	~Input();
 
 	char getChoice();
+	std::string getLine();
 
 private:
 

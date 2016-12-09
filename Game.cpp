@@ -17,29 +17,27 @@ Game::~Game() {
 
 
 void Game::run() {
-	output.clear();
+	output::clear();
 	chooseSide();
 
-	output.clear();
-	output.drawBoard(board);
-	output.drawNumbers();
+	output::clear();
+	output::drawBoard(board);
+	output::drawNumbers();
 
 	while (!board.isFull()) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		doTurn(computer);
-		output.clear();
-		output.drawBoard(board);
-		output.drawNumbers();
-		//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		output::clear();
+		output::drawBoard(board);
+		output::drawNumbers();
 		doTurn(human);
-		output.clear();
-		output.drawBoard(board);
-		output.drawNumbers();
+		output::clear();
+		output::drawBoard(board);
+		output::drawNumbers();
 	}
 
-	std::cout << "done" << std::endl;
+	std::cout << "Press any key to exit ...\n";
 
-	std::cin.get();
 }
 
 

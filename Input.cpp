@@ -5,27 +5,24 @@
 
 
 
-Input input;		// right now thread might never close?
+Input input;
+
 
 Input::Input() {
 	stop_thread = false;
 	input_desired = false;
-	buffer = "nonsense";
 	input_thread = std::thread(&Input::main, this);
 }
 
 
 Input::~Input() {
 
-	// cout some message to press any key to quit
+	// this runs after main exits
 	stop_thread = true;
 	
-	if (input_thread.joinable()) {		// thread main needs to finish 
+	if (input_thread.joinable()) {
 		input_thread.join();
 	}
-	std::cout << "closes" << std::endl;
-	std::cin.get();
-
 }
 
 
@@ -35,14 +32,13 @@ int Input::main() {
 
 		std::string input;
 		std::getline(std::cin, input);
-		// do stuff :D
 
 		if (input_desired) {
-			input_mutex.lock();
+			std::unique_lock<std::mutex> lock(input_mutex);
 			buffer = input;
-			input_mutex.unlock();
+			lock.unlock();
 			input_desired = false;
-			data_ready.notify_one();
+			data_ready.notify_all();
 		}
 
 	}
@@ -54,21 +50,9 @@ int Input::main() {
 
 // returns first letter or digit entered by the user
 char Input::getChoice() {
-
-	while (true) {
-		std::unique_lock<std::mutex> lock(input_mutex);
-
-		input_desired = true;	// buffer will get data once.
-
-		while (input_desired) {		//  need some way to check if wakeup wasn't spurous
-			data_ready.wait(lock);
-		}
-
-		std::string input;
-		input = buffer;
-
-		lock.unlock();
-
+	
+	while (true) {		// we only want to return in the for loop
+		std::string input = getLine();
 		for (int i = 0; i < input.size(); ++i) {
 			char test{ input[i] };
 			if (utility::inside(test, 'a', 'z') || utility::inside(test, 'A', 'Z') || utility::inside(test, '0', '9')) {
@@ -76,6 +60,21 @@ char Input::getChoice() {
 			}
 		}
 	}
-	
+}
+
+
+// doesn't give any gaurantees to what is in the line, it could be only "\n"
+std::string Input::getLine() {
+
+	std::unique_lock<std::mutex> lock(input_mutex);
+	input_desired = true;
+
+	// need some way to check if wakeup wasn't spurous
+	// because main resets input_desired to false when input is ready, we can only escape loop when !input_desired
+	while (input_desired) {
+		data_ready.wait(lock);
+	}
+
+	return buffer;
 }
 

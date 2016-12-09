@@ -17,8 +17,6 @@ public:
 
 private:
 
-	Output output;
-
 	Board board;
 	HumanPlayer human;
 	ComputerPlayer computer;

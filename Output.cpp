@@ -3,23 +3,13 @@
 #include "Output.h"
 
 
-
-Output::Output() {
-
-}
-
-Output::~Output() {
-
-}
-
-
-void Output::clear() {
+void output::clear() {
 	//system("cls");
 	for (int i = 0; i < 50; ++i) std::cout << '\n';
 }
 
 
-void Output::drawBoard(Board& board) {
+void output::drawBoard(Board& board) {
 	std::cout << "\n\n";
 	std::cout << "\t+---+---+---+---+\n";
 	for (int y = 0; y < Board::height; ++y) {
@@ -34,7 +24,7 @@ void Output::drawBoard(Board& board) {
 }
 
 
-void Output::drawNumbers() {
+void output::drawNumbers() {
 	std::cout << "\n";
 	std::cout << "\t  ^   ^   ^   ^  \n";
 	std::cout << "\t  1   2   3   4  \n";
