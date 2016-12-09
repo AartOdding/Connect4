@@ -33,7 +33,7 @@ bool Board::columnNotFull(int column) {
 
 void Board::doMove(int column, Side side) {
 	if (columnNotFull(column)) {
-		int y = cascade(column);
+		int y = Board::cascade(*this, column);
 		fields[column][y] = side;
 	}
 }
@@ -48,10 +48,15 @@ bool Board::isFull() {
 }
 
 
-int Board::cascade(int column) {
-	if		(fields[column][3] == Side::NEUTRAL) return 3;
-	else if (fields[column][2] == Side::NEUTRAL) return 2;
-	else if (fields[column][1] == Side::NEUTRAL) return 1;
-	else if (fields[column][0] == Side::NEUTRAL) return 0;
-	else throw std::invalid_argument("that column is already full");
+int Board::cascade(Board& board, int column) {
+	if		(board.getField(column, 3) == Side::NEUTRAL) return 3;
+	else if (board.getField(column, 2) == Side::NEUTRAL) return 2;
+	else if (board.getField(column, 1) == Side::NEUTRAL) return 1;
+	else if (board.getField(column, 0) == Side::NEUTRAL) return 0;
+	else throw std::invalid_argument("That column is already full.");
+}
+
+
+Side hasWinner() {
+
 }
