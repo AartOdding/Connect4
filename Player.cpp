@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Player.h"
-#include "console.h"
+#include "Input.h"
 
 
 
@@ -28,7 +28,7 @@ int HumanPlayer::getMove() {
 	std::cout << "Choose the column you want to play: ";
 
 	while (true) {
-		char choice{ console::getChoice() };
+		char choice{ input.getChoice() };
 		if (choice == '1') return 0;
 		if (choice == '2') return 1;
 		if (choice == '3') return 2;

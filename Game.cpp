@@ -1,8 +1,9 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+
 #include "Game.h"
-#include "console.h"
+#include "Input.h"
 #include "utility.h"
 
 
@@ -16,24 +17,24 @@ Game::~Game() {
 
 
 void Game::run() {
-	console::clear();
+	output.clear();
 	chooseSide();
 
-	console::clear();
-	console::drawBoard(board);
-	console::drawNumbers();
+	output.clear();
+	output.drawBoard(board);
+	output.drawNumbers();
 
 	while (!board.isFull()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		doTurn(computer);
-		console::clear();
-		console::drawBoard(board); 
-		console::drawNumbers();
+		output.clear();
+		output.drawBoard(board);
+		output.drawNumbers();
 		//std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		doTurn(human);
-		console::clear();
-		console::drawBoard(board);
-		console::drawNumbers();
+		output.clear();
+		output.drawBoard(board);
+		output.drawNumbers();
 	}
 
 	std::cout << "done" << std::endl;
@@ -67,7 +68,7 @@ void Game::doTurn(Player& player) {
 void Game::chooseSide() {
 	std::cout << "Choose your side, X or O: "; //<< std::endl;
 	while (true) {
-		char choice = console::getChoice();
+		char choice = input.getChoice();
 		if (choice == 'X' || choice == 'x') {
 			human.setSide(Side::X);
 			computer.setSide(Side::O);
