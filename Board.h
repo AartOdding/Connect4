@@ -1,7 +1,10 @@
 #pragma once
 
-#include "Side.h"
+#include <array>
+#include "Move.h"
 
+
+typedef std::pair<int, int> Position;
 
 class Board {
 
@@ -9,20 +12,23 @@ public:
 
 	Board();
 
-	bool columnNotFull(int);
-	bool isFull();
-	void doMove(int, Side);
+	void move(int, Side);	// use int, should return winner?
 
-	Side getField(int, int);
-	Side hasWinner();
+	bool columnFull(int)	const;
+	bool boardFull()		const;
+	bool winningMove(Move)	const;
+
+	Side getField(int, int)	const;
+	//Side hasWinner()		const;
 
 	static const int width{ 4 };
 	static const int height{ 4 };
 
-	static int cascade(Board&, int);
-
 private:
 
-	Side fields[width][height];
+	std::array<std::array<Side, height>, width> fields;
+	//std::pair<int, int> last_move;
+
+	int cascade(int)		const;
 
 };

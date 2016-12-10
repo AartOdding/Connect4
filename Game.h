@@ -3,7 +3,7 @@
 #include "Board.h"
 #include "Player.h"
 #include "Input.h"
-#include "Output.h"
+#include "output.h"
 
 
 class Game {

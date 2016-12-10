@@ -1,10 +1,10 @@
 #include <iostream>
-#include <stdexcept>
 #include "Board.h"
 #include "utility.h"
 
 
 Board::Board() {
+
 	for (int x = 0; x < width; ++x) {
 		for (int y = 0; y < height; ++y) {
 			fields[x][y] = Side::NEUTRAL;
@@ -13,50 +13,64 @@ Board::Board() {
 }
 
 
-// pass by value because Side is small, and we dont want the user to be able to change fields
-Side Board::getField(int x, int y) {
-	if (utility::inside(x, 0, width - 1) && utility::inside(y, 0, width - 1)) {
-		return fields[x][y];
+Side Board::getField(int x, int y) const {	// pass by value because Side is small, and we dont want the user to be able to change fields
+
+	utility::assert_inside(x, 0, width - 1);
+	utility::assert_inside(y, 0, height - 1);
+
+	return fields[x][y];
+}
+
+
+bool Board::columnFull(int column) const {
+
+	utility::assert_inside(column, 0, width - 1);
+
+	return fields[column][0] != Side::NEUTRAL;
+}
+
+
+void Board::move(int column, Side side) {
+
+	utility::assert_inside(column, 0, width - 1);
+	utility::assert_false(columnFull(column));
+
+	fields[column][cascade(column)] = side;
+}
+
+
+bool Board::boardFull() const {
+
+	for (int x = 0; x < width; ++x) {
+		if (fields[x][0] == Side::NEUTRAL) {
+			return false;
+		}
 	}
-	else throw std::invalid_argument("that is not a column");
+	return true;
 }
 
 
-bool Board::columnNotFull(int column) {
-	if (utility::inside(column, 0, width-1)) {
-		if (fields[column][0] == Side::NEUTRAL) return true;
-		else return false;
+int Board::cascade(int column) const {
+
+	utility::assert_inside(column, 0, width - 1);
+
+	for (int row{ height - 1 }; row >= 0; --row) {
+		if (fields[column][row] == Side::NEUTRAL) {
+			return row;
+		}
 	}
-	else throw std::invalid_argument("that is not a column");
+	return height;
 }
 
-
-void Board::doMove(int column, Side side) {
-	if (columnNotFull(column)) {
-		int y = Board::cascade(*this, column);
-		fields[column][y] = side;
-	}
+/*
+Side Board::hasWinner() const {
+	return Side::O;
 }
+*/
+
+bool Board::winningMove(Move move) const {
 
 
-bool Board::isFull() {
-	return
-		fields[0][0] != Side::NEUTRAL &&
-		fields[1][0] != Side::NEUTRAL &&
-		fields[2][0] != Side::NEUTRAL &&
-		fields[3][0] != Side::NEUTRAL;
-}
 
-
-int Board::cascade(Board& board, int column) {
-	if		(board.getField(column, 3) == Side::NEUTRAL) return 3;
-	else if (board.getField(column, 2) == Side::NEUTRAL) return 2;
-	else if (board.getField(column, 1) == Side::NEUTRAL) return 1;
-	else if (board.getField(column, 0) == Side::NEUTRAL) return 0;
-	else throw std::invalid_argument("That column is already full.");
-}
-
-
-Side hasWinner() {
-
+	return true;
 }

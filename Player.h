@@ -1,7 +1,7 @@
 #pragma once
 
 #include <random>
-#include "Side.h"
+#include "Move.h"
 
 
 

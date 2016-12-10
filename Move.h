@@ -5,3 +5,10 @@ enum class Side {
 	X,
 	O
 };
+
+
+struct Move {
+	int x;
+	int y;
+	Side side;
+};

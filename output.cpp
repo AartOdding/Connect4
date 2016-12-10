@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Output.h"
+#include "output.h"
 
 
 void output::clear() {

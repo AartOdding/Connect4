@@ -24,7 +24,7 @@ void Game::run() {
 	output::drawBoard(board);
 	output::drawNumbers();
 
-	while (!board.isFull()) {
+	while (!board.boardFull()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		doTurn(computer);
 		output::clear();
@@ -36,7 +36,7 @@ void Game::run() {
 		output::drawNumbers();
 	}
 
-	std::cout << "Press any key to exit ...\n";
+	std::cout << "Press enter to exit ...\n";
 
 }
 
@@ -51,8 +51,8 @@ void Game::doTurn(Player& player) {
 			move = player.getMove();
 		}
 
-		if (board.columnNotFull(move)) {
-			board.doMove(move, player.getSide());
+		if (!board.columnFull(move)) {
+			board.move(move, player.getSide());
 			break;
 		}
 		else {
